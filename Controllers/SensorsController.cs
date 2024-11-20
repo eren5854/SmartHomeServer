@@ -23,6 +23,13 @@ public sealed class SensorsController(
     }
 
     [HttpGet]
+    public async Task<IActionResult> GetAllSensorData(CancellationToken cancellationToken)
+    {
+        var response = await sensorService.GetAllSensorData(cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet]
     public async Task<IActionResult> GetById(Guid Id, CancellationToken cancellationToken)
     {
         var response = await sensorService.GetById(Id,cancellationToken);

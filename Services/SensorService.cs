@@ -35,6 +35,11 @@ public sealed class SensorService(
         return await sensorRepository.GetById(Id, cancellationToken);
     }
 
+    public async Task<Result<List<GetAllSensorDataDto>>> GetAllSensorData(CancellationToken cancellationToken)
+    {
+        return await sensorRepository.GetAllSensorData(cancellationToken);
+    }
+
     //Sadece ilgili kulllanıcılar için sensör silme metodu.
     public async Task<Result<string>> DeleteById(Guid Id, Guid AppUserId, CancellationToken cancellationToken)
     {

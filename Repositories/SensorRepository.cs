@@ -2,6 +2,7 @@
 using ED.Result;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeServer.Context;
+using SmartHomeServer.DTOs.SensorDto;
 using SmartHomeServer.Enums;
 using SmartHomeServer.Models;
 
@@ -49,6 +50,24 @@ public sealed class SensorRepository(
     {
         var sensors = await context.Sensors.OrderBy(o => o.CreatedDate).ToListAsync(cancellationToken);
         return Result<List<Sensor>>.Succeed(sensors);
+    }
+
+    public async Task<Result<List<GetAllSensorDataDto>>> GetAllSensorData(CancellationToken cancellationToken)
+    {
+        var sensors = await context.Sensors
+            .Select(
+                s => new GetAllSensorDataDto(
+                s.SensorName,
+                s.SerialNo,
+                s.SensorType,
+                s.Data1,
+                s.Data2,
+                s.Data3,
+                s.Data4,
+                s.Data5,
+                s.Data6))
+            .ToListAsync(cancellationToken);
+        return Result<List<GetAllSensorDataDto>>.Succeed(sensors);
     }
 
     public async Task<Result<Sensor>> GetById(Guid Id, CancellationToken cancellationToken)
