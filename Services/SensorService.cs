@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using ED.GenericRepository;
 using ED.Result;
-using Microsoft.EntityFrameworkCore;
 using SmartHomeServer.DTOs.SensorDto;
 using SmartHomeServer.Models;
 using SmartHomeServer.Repositories;
