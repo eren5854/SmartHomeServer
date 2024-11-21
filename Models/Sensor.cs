@@ -8,6 +8,7 @@ public sealed class Sensor : Entity
     public string SensorName { get; set; } = string.Empty;
     public string? Description { get; set; }
     public string SerialNo { get; set; } = string.Empty;
+    public string? Status { get; set; }
 
     public SensorTypeEnum SensorType { get; set; } = SensorTypeEnum.Other;
 

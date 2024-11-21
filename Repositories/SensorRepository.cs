@@ -1,15 +1,18 @@
 ﻿using ED.GenericRepository;
 using ED.Result;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeServer.Context;
 using SmartHomeServer.DTOs.SensorDto;
 using SmartHomeServer.Enums;
+using SmartHomeServer.Hubs;
 using SmartHomeServer.Models;
 
 namespace SmartHomeServer.Repositories;
 
 public sealed class SensorRepository(
-    ApplicationDbContext context)
+    ApplicationDbContext context,
+    IHubContext<SensorHub> hubContext)
 {
     public async Task<Result<string>> Create(Sensor sensor, CancellationToken cancellationToken)
     {
@@ -108,6 +111,8 @@ public sealed class SensorRepository(
     {
         context.Update(sensor);
         await context.SaveChangesAsync(cancellationToken);
+        //string connectionId = SensorHub.Sensors.FirstOrDefault(p => p.Value == sensor.SerialNo).Key;
+        //await hubContext.Clients.Client(connectionId).SendAsync("Sensor", sensor);
         return Result<string>.Succeed("Sensor güncelleme işlemi başarılı");
     }
 }

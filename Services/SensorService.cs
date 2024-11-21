@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using ED.Result;
+using Microsoft.AspNetCore.SignalR;
 using SmartHomeServer.DTOs.SensorDto;
+using SmartHomeServer.Hubs;
 using SmartHomeServer.Models;
 using SmartHomeServer.Repositories;
 
@@ -9,6 +11,7 @@ namespace SmartHomeServer.Services;
 public sealed class SensorService(
     SensorRepository sensorRepository,
     AppUserRepository appUserRepository,
+    IHubContext<SensorHub> hubContext,
     IMapper mapper)
 {
     //Tüm kullanıcılar için sensör oluşturan metod.
@@ -98,6 +101,9 @@ public sealed class SensorService(
         mapper.Map(request, sensor);
         sensor.UpdatedBy = "Admin";
         sensor.UpdatedDate = DateTime.Now;
+
+        await hubContext.Clients.All.SendAsync("Sensor", sensor);
+        //await hubContext.Clients.All
 
         return await sensorRepository.Update(sensor, cancellationToken);
     }

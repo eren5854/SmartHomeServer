@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SmartHomeServer.Context;
+using SmartHomeServer.Hubs;
 using SmartHomeServer.Mapper;
 using SmartHomeServer.Middlewares;
 using SmartHomeServer.Models;
@@ -77,6 +78,8 @@ builder.Services.AddSwaggerGen(setup =>
                 });
 });
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -94,5 +97,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<SensorHub>("/sensor-hub");
 
 app.Run();
