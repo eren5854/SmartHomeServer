@@ -25,7 +25,7 @@ public class JwtProvider(
             //new Claim("UserRole", user.UserRole.ToString())
         };
 
-        DateTime expires = DateTime.Now.AddDays(30);
+        DateTime expires = DateTime.Now.AddMonths(3);
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.SecretKey));
 

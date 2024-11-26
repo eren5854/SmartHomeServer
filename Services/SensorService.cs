@@ -103,7 +103,6 @@ public sealed class SensorService(
         sensor.UpdatedDate = DateTime.Now;
 
         await hubContext.Clients.All.SendAsync("Sensor", sensor);
-        //await hubContext.Clients.All
 
         return await sensorRepository.Update(sensor, cancellationToken);
     }

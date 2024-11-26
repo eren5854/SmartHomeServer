@@ -5,7 +5,7 @@ using SmartHomeServer.DTOs.SensorDto;
 using SmartHomeServer.Services;
 
 namespace SmartHomeServer.Controllers;
-//[Authorize(AuthenticationSchemes = "Bearer")]
+[Authorize(AuthenticationSchemes = "Bearer")]
 public sealed class SensorsController(
     SensorService sensorService) : ApiController
 {
