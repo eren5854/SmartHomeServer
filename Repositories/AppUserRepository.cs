@@ -23,7 +23,7 @@ public sealed class AppUserRepository(
 
     public async Task<Result<AppUser>> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        AppUser? appUser = await context.Users.SingleOrDefaultAsync(s => s.Id == Id);
+        AppUser? appUser = await context.Users.Include(p => p.Sensors).SingleOrDefaultAsync(s => s.Id == Id);
         if (appUser is null)
         {
             return Result<AppUser>.Failure("Kullanıcı bulunamadı");

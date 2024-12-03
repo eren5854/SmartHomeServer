@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHomeServer.Context;
 
@@ -11,9 +12,11 @@ using SmartHomeServer.Context;
 namespace SmartHomeServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241203015724_secret_key_eklendi")]
+    partial class secret_key_eklendi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,9 +150,6 @@ namespace SmartHomeServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -177,8 +177,6 @@ namespace SmartHomeServer.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("Rooms");
                 });
@@ -233,9 +231,6 @@ namespace SmartHomeServer.Migrations
 
                     b.Property<Guid?>("RoomId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("SecretKey")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SensorName")
                         .IsRequired()
@@ -339,15 +334,6 @@ namespace SmartHomeServer.Migrations
                     b.ToTable("TvCommands");
                 });
 
-            modelBuilder.Entity("SmartHomeServer.Models.Room", b =>
-                {
-                    b.HasOne("SmartHomeServer.Models.AppUser", "AppUser")
-                        .WithMany("Rooms")
-                        .HasForeignKey("AppUserId");
-
-                    b.Navigation("AppUser");
-                });
-
             modelBuilder.Entity("SmartHomeServer.Models.Sensor", b =>
                 {
                     b.HasOne("SmartHomeServer.Models.AppUser", "AppUser")
@@ -374,8 +360,6 @@ namespace SmartHomeServer.Migrations
 
             modelBuilder.Entity("SmartHomeServer.Models.AppUser", b =>
                 {
-                    b.Navigation("Rooms");
-
                     b.Navigation("Sensors");
                 });
 

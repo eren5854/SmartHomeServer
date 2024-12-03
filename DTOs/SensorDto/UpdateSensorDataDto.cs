@@ -1,7 +1,7 @@
 ﻿namespace SmartHomeServer.DTOs.SensorDto;
 
 public sealed record UpdateSensorDataDto(
-    string SerialNo,
+    string SecretKey,
     double Data1,
     double? Data2,
     double? Data3,

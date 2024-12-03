@@ -10,6 +10,7 @@ public sealed class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<CreateAppUserDto, AppUser>();
+        CreateMap<UpdateAppUserDto, AppUser>();
 
         CreateMap<CreateSensorDto, Sensor>();
         CreateMap<UpdateSensorDto, Sensor>();

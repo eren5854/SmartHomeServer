@@ -10,10 +10,15 @@ public sealed class Sensor : Entity
     public string SerialNo { get; set; } = string.Empty;
     public string? Status { get; set; }
 
+    public string? SecretKey { get; set; }
+
     public SensorTypeEnum SensorType { get; set; } = SensorTypeEnum.Other;
 
     public Guid? AppUserId { get; set; }
     public AppUser? AppUser { get; set; }
+
+    public Guid? RoomId { get; set; }
+    public Room? Room { get; set; }
 
     public double? Data1 { get; set; }
     public double? Data2 { get; set; }

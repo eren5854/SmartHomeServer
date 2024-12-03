@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHomeServer.Context;
 
@@ -11,9 +12,11 @@ using SmartHomeServer.Context;
 namespace SmartHomeServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241203005210_tv-command-sinifi-ve-room-eklendi")]
+    partial class tvcommandsinifiveroomeklendi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,13 +117,6 @@ namespace SmartHomeServer.Migrations
                     b.Property<DateTime?>("RefreshTokenExpires")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SecretToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -145,9 +141,6 @@ namespace SmartHomeServer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
@@ -178,9 +171,7 @@ namespace SmartHomeServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("Rooms");
+                    b.ToTable("Room");
                 });
 
             modelBuilder.Entity("SmartHomeServer.Models.Sensor", b =>
@@ -234,9 +225,6 @@ namespace SmartHomeServer.Migrations
                     b.Property<Guid?>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("SecretKey")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SensorName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -269,85 +257,6 @@ namespace SmartHomeServer.Migrations
                     b.ToTable("Sensors");
                 });
 
-            modelBuilder.Entity("SmartHomeServer.Models.TvCommand", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool?>("ChannelMenu")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("NextChannel")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("OnOff")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("PrevChannel")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SerialNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("Source")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool?>("VolumeDown")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("VolumeUp")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("TvCommands");
-                });
-
-            modelBuilder.Entity("SmartHomeServer.Models.Room", b =>
-                {
-                    b.HasOne("SmartHomeServer.Models.AppUser", "AppUser")
-                        .WithMany("Rooms")
-                        .HasForeignKey("AppUserId");
-
-                    b.Navigation("AppUser");
-                });
-
             modelBuilder.Entity("SmartHomeServer.Models.Sensor", b =>
                 {
                     b.HasOne("SmartHomeServer.Models.AppUser", "AppUser")
@@ -363,19 +272,8 @@ namespace SmartHomeServer.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("SmartHomeServer.Models.TvCommand", b =>
-                {
-                    b.HasOne("SmartHomeServer.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId");
-
-                    b.Navigation("AppUser");
-                });
-
             modelBuilder.Entity("SmartHomeServer.Models.AppUser", b =>
                 {
-                    b.Navigation("Rooms");
-
                     b.Navigation("Sensors");
                 });
 

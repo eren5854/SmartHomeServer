@@ -9,6 +9,7 @@ namespace SmartHomeServer.Controllers;
 public sealed class SensorsController(
     SensorService sensorService) : ApiController
 {
+    //Users
     [HttpPost]
     public async Task<IActionResult> Create(CreateSensorDto request, CancellationToken cancellationToken)
     {
@@ -17,23 +18,9 @@ public sealed class SensorsController(
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllSensorByUserId(Guid Id, CancellationToken cancellation)
     {
-        var response = await sensorService.GetAll(cancellationToken);
-        return StatusCode(response.StatusCode, response);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetAllSensorData(CancellationToken cancellationToken)
-    {
-        var response = await sensorService.GetAllSensorData(cancellationToken);
-        return StatusCode(response.StatusCode, response);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetById(Guid Id, CancellationToken cancellationToken)
-    {
-        var response = await sensorService.GetById(Id,cancellationToken);
+        var response = await sensorService.GetAllSensorByUserId(Id, cancellation);
         return StatusCode(response.StatusCode, response);
     }
 
@@ -44,6 +31,30 @@ public sealed class SensorsController(
         return StatusCode(response.StatusCode, response);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> DeleteById(Guid Id, CancellationToken cancellationToken)
+    {
+        var response = await sensorService.DeleteById(Id, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetById(Guid Id, CancellationToken cancellationToken)
+    {
+        var response = await sensorService.GetById(Id, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
+
+
+    //Esp
+    [HttpGet]
+    public async Task<IActionResult> GetBySecretKey(string SecretKey, CancellationToken cancellationToken)
+    {
+        var response = await sensorService.GetBySecretKey(SecretKey, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
     [HttpPost]
     public async Task<IActionResult> UpdateSensorData(UpdateSensorDataDto request, CancellationToken cancellationToken)
     {
@@ -51,10 +62,23 @@ public sealed class SensorsController(
         return StatusCode(response.StatusCode, response);
     }
 
+
+
+    //Admin
+    [Authorize(Roles = "Admin")]
     [HttpGet]
-    public async Task<IActionResult> DeleteById(Guid Id, Guid AppUserId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var response = await sensorService.DeleteById(Id, AppUserId, cancellationToken);
+        var response = await sensorService.GetAll(cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    public async Task<IActionResult> GetAllSensorData(CancellationToken cancellationToken)
+    {
+        var response = await sensorService.GetAllSensorData(cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
 }

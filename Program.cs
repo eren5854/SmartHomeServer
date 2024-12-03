@@ -44,6 +44,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 
 builder.Services.AddScoped<AppUserRepository>();
+builder.Services.AddScoped<AppUserService>();
 
 builder.Services.AddScoped<SensorRepository>();
 builder.Services.AddScoped<SensorService>();

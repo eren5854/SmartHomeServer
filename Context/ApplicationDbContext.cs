@@ -13,6 +13,8 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     }
 
     public DbSet<Sensor> Sensors { get; set; }
+    public DbSet<Room> Rooms { get; set; } 
+    public DbSet<TvCommand> TvCommands { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

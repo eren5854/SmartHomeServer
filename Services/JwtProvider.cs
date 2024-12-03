@@ -22,6 +22,7 @@ public class JwtProvider(
             new Claim("FullName", user.FullName!),
             new Claim("Email", user.Email ?? ""),
             new Claim("UserName", user.UserName ?? ""),
+            new Claim(ClaimTypes.Role, user.Role.ToString())
             //new Claim("UserRole", user.UserRole.ToString())
         };
 

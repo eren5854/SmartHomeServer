@@ -7,5 +7,6 @@ public sealed record UpdateSensorDto(
     string SensorName,
     string? Description,
     string SerialNo,
-    SensorTypeEnum SensorType,
-    Guid AppUserId);
+    SensorTypeEnum SensorType
+    //Guid AppUserId
+    );
