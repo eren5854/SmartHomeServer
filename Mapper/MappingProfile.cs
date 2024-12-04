@@ -37,6 +37,7 @@ public sealed class MappingProfile : Profile
                     Value = src.ActionValue
                 }
             }));
+
         CreateMap<UpdateScenarioDto, Scenario>()
             .ForMember(member => member.Trigger, opt => opt.MapFrom(src => new Trigger
             {
