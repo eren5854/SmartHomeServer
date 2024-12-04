@@ -2,7 +2,8 @@
 
 namespace SmartHomeServer.DTOs.SensorDto;
 
-public sealed record GetAllSensorDataDto(
+public sealed record GetAllSensorDto(
+    Guid Id,
     string SensorName,
     string SerialNo,
     string Status,

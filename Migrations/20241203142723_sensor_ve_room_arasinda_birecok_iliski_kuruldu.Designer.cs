@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHomeServer.Context;
 
@@ -11,9 +12,11 @@ using SmartHomeServer.Context;
 namespace SmartHomeServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241203142723_sensor_ve_room_arasinda_birecok_iliski_kuruldu")]
+    partial class sensor_ve_room_arasinda_birecok_iliski_kuruldu
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,52 +43,6 @@ namespace SmartHomeServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("SmartHomeServer.Models.Action", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ActionType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("ScenarioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SensorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Value")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScenarioId");
-
-                    b.HasIndex("SensorId");
-
-                    b.ToTable("Actions");
                 });
 
             modelBuilder.Entity("SmartHomeServer.Models.AppUser", b =>
@@ -229,48 +186,6 @@ namespace SmartHomeServer.Migrations
                     b.ToTable("Rooms");
                 });
 
-            modelBuilder.Entity("SmartHomeServer.Models.Scenario", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ScenarioDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ScenarioName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("Scenarios");
-                });
-
             modelBuilder.Entity("SmartHomeServer.Models.Sensor", b =>
                 {
                     b.Property<Guid>("Id")
@@ -357,52 +272,6 @@ namespace SmartHomeServer.Migrations
                     b.ToTable("Sensors");
                 });
 
-            modelBuilder.Entity("SmartHomeServer.Models.Trigger", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("ScenarioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("SensorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("TriggerTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TriggerType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScenarioId");
-
-                    b.HasIndex("SensorId");
-
-                    b.ToTable("Triggers");
-                });
-
             modelBuilder.Entity("SmartHomeServer.Models.TvCommand", b =>
                 {
                     b.Property<Guid>("Id")
@@ -473,41 +342,11 @@ namespace SmartHomeServer.Migrations
                     b.ToTable("TvCommands");
                 });
 
-            modelBuilder.Entity("SmartHomeServer.Models.Action", b =>
-                {
-                    b.HasOne("SmartHomeServer.Models.Scenario", "Scenario")
-                        .WithMany("Actions")
-                        .HasForeignKey("ScenarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SmartHomeServer.Models.Sensor", "Sensor")
-                        .WithMany()
-                        .HasForeignKey("SensorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Scenario");
-
-                    b.Navigation("Sensor");
-                });
-
             modelBuilder.Entity("SmartHomeServer.Models.Room", b =>
                 {
                     b.HasOne("SmartHomeServer.Models.AppUser", "AppUser")
                         .WithMany("Rooms")
                         .HasForeignKey("AppUserId");
-
-                    b.Navigation("AppUser");
-                });
-
-            modelBuilder.Entity("SmartHomeServer.Models.Scenario", b =>
-                {
-                    b.HasOne("SmartHomeServer.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("AppUser");
                 });
@@ -526,23 +365,6 @@ namespace SmartHomeServer.Migrations
                     b.Navigation("AppUser");
 
                     b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("SmartHomeServer.Models.Trigger", b =>
-                {
-                    b.HasOne("SmartHomeServer.Models.Scenario", "Scenario")
-                        .WithMany("Triggers")
-                        .HasForeignKey("ScenarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SmartHomeServer.Models.Sensor", "Sensor")
-                        .WithMany()
-                        .HasForeignKey("SensorId");
-
-                    b.Navigation("Scenario");
-
-                    b.Navigation("Sensor");
                 });
 
             modelBuilder.Entity("SmartHomeServer.Models.TvCommand", b =>
@@ -564,13 +386,6 @@ namespace SmartHomeServer.Migrations
             modelBuilder.Entity("SmartHomeServer.Models.Room", b =>
                 {
                     b.Navigation("Sensors");
-                });
-
-            modelBuilder.Entity("SmartHomeServer.Models.Scenario", b =>
-                {
-                    b.Navigation("Actions");
-
-                    b.Navigation("Triggers");
                 });
 #pragma warning restore 612, 618
         }

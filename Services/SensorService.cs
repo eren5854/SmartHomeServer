@@ -3,6 +3,7 @@ using ED.Result;
 using Microsoft.AspNetCore.SignalR;
 using SmartHomeServer.DTOs.SensorDto;
 using SmartHomeServer.Hubs;
+using SmartHomeServer.Middlewares;
 using SmartHomeServer.Models;
 using SmartHomeServer.Repositories;
 
@@ -18,7 +19,7 @@ public sealed class SensorService(
     {
         Sensor sensor = mapper.Map<Sensor>(request);
         sensor.SerialNo = await sensorRepository.CreateSerialNo(sensor);
-        sensor.SecretKey = sensorRepository.GenerateSecretKey();
+        sensor.SecretKey = Generate.GenerateSecretKey();
         sensor.CreatedBy = "Admin";
         sensor.CreatedDate = DateTime.Now;
         sensor.IsActive = true;
@@ -53,6 +54,20 @@ public sealed class SensorService(
         sensor.UpdatedBy = "Admin";
         sensor.UpdatedDate = DateTime.Now;
 
+        return await sensorRepository.Update(sensor, cancellationToken);
+    }
+
+    public async Task<Result<string>> UpdateSecretKeyById(Guid Id, CancellationToken cancellationToken)
+    {
+        Sensor? sensor = sensorRepository.GetById(Id);
+        if (sensor is null)
+        {
+            return Result<string>.Failure("Sensor bulunamadı");
+        }
+
+        sensor.SecretKey = Generate.GenerateSecretKey();
+        sensor.UpdatedBy = "Admin";
+        sensor.UpdatedDate = DateTime.Now;
         return await sensorRepository.Update(sensor, cancellationToken);
     }
 

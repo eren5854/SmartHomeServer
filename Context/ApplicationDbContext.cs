@@ -6,18 +6,40 @@ using SmartHomeServer.Models;
 
 namespace SmartHomeServer.Context;
 
-public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid> , IUnitOfWork
+public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>, IUnitOfWork
 {
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
     }
 
     public DbSet<Sensor> Sensors { get; set; }
-    public DbSet<Room> Rooms { get; set; } 
+    public DbSet<Room> Rooms { get; set; }
     public DbSet<TvCommand> TvCommands { get; set; }
+
+    public DbSet<Scenario> Scenarios { get; set; }
+    public DbSet<Trigger> Triggers { get; set; }
+    public DbSet<Models.Action> Actions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.Entity<Sensor>()
+            .HasOne(sensor => sensor.Room)
+            .WithMany(room => room.Sensors)
+            .HasForeignKey(sensor => sensor.RoomId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Trigger>()
+            .HasOne(trigger => trigger.Scenario)
+            .WithMany(scenario => scenario.Triggers)
+            .HasForeignKey(trigger => trigger.ScenarioId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Models.Action>()
+            .HasOne(action => action.Scenario)
+            .WithMany(scenario => scenario.Actions)
+            .HasForeignKey(action => action.ScenarioId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.Ignore<IdentityRoleClaim<Guid>>();
         builder.Ignore<IdentityUserClaim<Guid>>();
         builder.Ignore<IdentityUserLogin<Guid>>();

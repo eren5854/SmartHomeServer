@@ -49,14 +49,14 @@ public sealed class SensorRepository(
         return $"SN{type}{formattedDate}{number:D3}";
     }
 
-    public string GenerateSecretKey()
-    {
-        using (var hmac = new HMACSHA256())
-        {
-            var key = Convert.ToBase64String(hmac.Key);
-            return key.Replace("+", "").Replace("/", "").Replace("=", "");
-        }
-    }
+    //public string GenerateSecretKey()
+    //{
+    //    using (var hmac = new HMACSHA256())
+    //    {
+    //        var key = Convert.ToBase64String(hmac.Key);
+    //        return key.Replace("+", "").Replace("/", "").Replace("=", "");
+    //    }
+    //}
 
     public async Task<Result<List<Sensor>>> GetAllSensorByUserId(Guid Id, CancellationToken cancellation)
     {
@@ -72,6 +72,7 @@ public sealed class SensorRepository(
         GetAllSensorDataDto? sensor = await context.Sensors.Where(p => p.SecretKey == SecretKey).Select(s => new GetAllSensorDataDto(
             s.SensorName,
             s.SerialNo,
+            s.Status!,
             s.SensorType,
             s.Data1,
             s.Data2,
@@ -90,7 +91,10 @@ public sealed class SensorRepository(
     
     public async Task<Result<Sensor>> GetById(Guid Id, CancellationToken cancellationToken)
     {
-        Sensor? sensor = await context.Sensors.Where(p => p.Id == Id).FirstOrDefaultAsync(cancellationToken);
+        Sensor? sensor = await context.Sensors
+            .Where(p => p.Id == Id)
+            .Include(i => i.Room)
+            .FirstOrDefaultAsync(cancellationToken);
         if (sensor is null)
         {
             return Result<Sensor>.Failure("Sensor bulunamadı");
@@ -145,6 +149,7 @@ public sealed class SensorRepository(
                 s => new GetAllSensorDataDto(
                 s.SensorName,
                 s.SerialNo,
+                s.Status!,
                 s.SensorType,
                 s.Data1,
                 s.Data2,

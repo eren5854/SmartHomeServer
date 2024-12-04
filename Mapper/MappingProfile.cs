@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using SmartHomeServer.DTOs.AppUserDto;
+using SmartHomeServer.DTOs.RoomDto;
+using SmartHomeServer.DTOs.ScenarioDto;
 using SmartHomeServer.DTOs.SensorDto;
 using SmartHomeServer.Models;
 
@@ -15,5 +17,10 @@ public sealed class MappingProfile : Profile
         CreateMap<CreateSensorDto, Sensor>();
         CreateMap<UpdateSensorDto, Sensor>();
         CreateMap<UpdateSensorDataDto, Sensor>();
+
+        CreateMap<CreateRoomDto, Room>();
+        CreateMap<UpdateRoomDto, Room>();
+
+        CreateMap<CreateScenarioDto, Scenario>();
     }
 }

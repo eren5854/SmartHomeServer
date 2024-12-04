@@ -32,6 +32,13 @@ public sealed class SensorsController(
     }
 
     [HttpGet]
+    public async Task<IActionResult> UpdateSecretKeyById(Guid Id, CancellationToken cancellationToken)
+    {
+        var response = await sensorService.UpdateSecretKeyById(Id, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet]
     public async Task<IActionResult> DeleteById(Guid Id, CancellationToken cancellationToken)
     {
         var response = await sensorService.DeleteById(Id, cancellationToken);
