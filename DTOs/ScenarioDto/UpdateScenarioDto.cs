@@ -2,7 +2,8 @@
 
 namespace SmartHomeServer.DTOs.ScenarioDto;
 
-public sealed record CreateScenarioDto(
+public sealed record UpdateScenarioDto(
+    Guid Id,
     Guid AppUserId,
     string ScenarioName,
     string? ScenarioDescription,

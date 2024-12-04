@@ -21,4 +21,18 @@ public sealed class ScenariosController(
         var response = await scenarioService.GetAllScenarioByUserId(Id, cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Update(UpdateScenarioDto request, CancellationToken cancellationToken)
+    {
+        var response = await scenarioService.Update(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> DeleteById(Guid Id, CancellationToken cancellationToken)
+    {
+        var response = await scenarioService.DeleteById(Id, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
 }

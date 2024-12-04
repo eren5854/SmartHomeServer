@@ -55,6 +55,9 @@ builder.Services.AddScoped<RoomService>();
 builder.Services.AddScoped<ScenarioRepository>();
 builder.Services.AddScoped<ScenarioService>();
 
+builder.Services.AddScoped<TriggerRepository>();
+builder.Services.AddScoped<TriggerService>();
+
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 builder.Services.AddControllers();

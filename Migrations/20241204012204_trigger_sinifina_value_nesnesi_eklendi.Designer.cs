@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHomeServer.Context;
 
@@ -11,9 +12,11 @@ using SmartHomeServer.Context;
 namespace SmartHomeServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241204012204_trigger_sinifina_value_nesnesi_eklendi")]
+    partial class trigger_sinifina_value_nesnesi_eklendi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,6 +67,9 @@ namespace SmartHomeServer.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("ScenarioId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("SensorId")
                         .HasColumnType("uniqueidentifier");
 
@@ -77,6 +83,8 @@ namespace SmartHomeServer.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ScenarioId");
 
                     b.HasIndex("SensorId");
 
@@ -253,9 +261,6 @@ namespace SmartHomeServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TriggerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -265,9 +270,6 @@ namespace SmartHomeServer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
-
-                    b.HasIndex("TriggerId")
-                        .IsUnique();
 
                     b.ToTable("Scenarios");
                 });
@@ -364,9 +366,6 @@ namespace SmartHomeServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ActionId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -379,6 +378,9 @@ namespace SmartHomeServer.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<Guid>("ScenarioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("SensorId")
                         .HasColumnType("uniqueidentifier");
@@ -400,8 +402,7 @@ namespace SmartHomeServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActionId")
-                        .IsUnique();
+                    b.HasIndex("ScenarioId");
 
                     b.HasIndex("SensorId");
 
@@ -480,11 +481,19 @@ namespace SmartHomeServer.Migrations
 
             modelBuilder.Entity("SmartHomeServer.Models.Action", b =>
                 {
+                    b.HasOne("SmartHomeServer.Models.Scenario", "Scenario")
+                        .WithMany("Actions")
+                        .HasForeignKey("ScenarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SmartHomeServer.Models.Sensor", "Sensor")
                         .WithMany()
                         .HasForeignKey("SensorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Scenario");
 
                     b.Navigation("Sensor");
                 });
@@ -506,15 +515,7 @@ namespace SmartHomeServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SmartHomeServer.Models.Trigger", "Trigger")
-                        .WithOne()
-                        .HasForeignKey("SmartHomeServer.Models.Scenario", "TriggerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("AppUser");
-
-                    b.Navigation("Trigger");
                 });
 
             modelBuilder.Entity("SmartHomeServer.Models.Sensor", b =>
@@ -535,9 +536,9 @@ namespace SmartHomeServer.Migrations
 
             modelBuilder.Entity("SmartHomeServer.Models.Trigger", b =>
                 {
-                    b.HasOne("SmartHomeServer.Models.Action", "Action")
-                        .WithOne()
-                        .HasForeignKey("SmartHomeServer.Models.Trigger", "ActionId")
+                    b.HasOne("SmartHomeServer.Models.Scenario", "Scenario")
+                        .WithMany("Triggers")
+                        .HasForeignKey("ScenarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -545,7 +546,7 @@ namespace SmartHomeServer.Migrations
                         .WithMany()
                         .HasForeignKey("SensorId");
 
-                    b.Navigation("Action");
+                    b.Navigation("Scenario");
 
                     b.Navigation("Sensor");
                 });
@@ -569,6 +570,13 @@ namespace SmartHomeServer.Migrations
             modelBuilder.Entity("SmartHomeServer.Models.Room", b =>
                 {
                     b.Navigation("Sensors");
+                });
+
+            modelBuilder.Entity("SmartHomeServer.Models.Scenario", b =>
+                {
+                    b.Navigation("Actions");
+
+                    b.Navigation("Triggers");
                 });
 #pragma warning restore 612, 618
         }

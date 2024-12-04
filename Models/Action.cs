@@ -5,8 +5,8 @@ namespace SmartHomeServer.Models;
 
 public sealed class Action : Entity
 {
-    public Guid ScenarioId { get; set; } = default!;
-    public Scenario Scenario { get; set; } = default!;
+    //public Guid ScenarioId { get; set; } = default!;
+    //public Scenario Scenario { get; set; } = default!;
 
     public Guid SensorId { get; set; } = default!;
     public Sensor Sensor { get; set; } = default!;

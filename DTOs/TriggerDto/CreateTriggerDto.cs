@@ -6,4 +6,5 @@ public sealed record CreateTriggerDto(
     Guid ScenarioId,
     Guid SensorId,
     TriggerTypeEnum TriggerType,
-    DateTime TriggerTime);
+    decimal? TriggerValue,
+    DateTime? TriggerTime);
