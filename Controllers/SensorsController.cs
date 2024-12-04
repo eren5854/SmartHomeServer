@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
+using SmartHomeServer.BackgroundServices;
 using SmartHomeServer.DTOs.SensorDto;
 using SmartHomeServer.Services;
 
@@ -66,6 +68,7 @@ public sealed class SensorsController(
     public async Task<IActionResult> UpdateSensorData(UpdateSensorDataDto request, CancellationToken cancellationToken)
     {
         var response = await sensorService.UpdateSensorData(request, cancellationToken);
+        //BackgroundJob.Enqueue(() => TimeBackgroundService.Test());
         return StatusCode(response.StatusCode, response);
     }
 

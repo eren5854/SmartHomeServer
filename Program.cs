@@ -1,8 +1,10 @@
 using DefaultCorsPolicyNugetPackage;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using SmartHomeServer.BackgroundServices;
 using SmartHomeServer.Context;
 using SmartHomeServer.Hubs;
 using SmartHomeServer.Mapper;
@@ -20,6 +22,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
 });
+
+builder.Services.AddHangfire(config =>
+{
+    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("SqlServer"));
+});
+
+builder.Services.AddHangfireServer();
 
 builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
 {
@@ -98,6 +107,11 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 
 ExtensionMiddleware.CreateAdmin(app);
+
+app.UseHangfireDashboard();
+
+RecurringJob.AddOrUpdate<TimeBackgroundService>(x => x.ValueTrigger(), "*/10 * * * * *");
+RecurringJob.AddOrUpdate<TimeBackgroundService>(x => x.TimeTrigger(), Cron.Minutely());
 
 app.UseHttpsRedirection();
 

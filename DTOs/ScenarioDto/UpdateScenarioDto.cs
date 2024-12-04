@@ -9,7 +9,7 @@ public sealed record UpdateScenarioDto(
     string? ScenarioDescription,
     Guid? TriggerSensorId,
     TriggerTypeEnum TriggerType,
-    decimal? TriggerValue,
+    double? TriggerValue,
     DateTime? TriggerTime,
     Guid ActionSensorId,
     ActionTypeEnum ActionType,

@@ -118,6 +118,8 @@ public sealed class SensorService(
 
         await hubContext.Clients.All.SendAsync("Sensor", sensor);
 
+
+
         return await sensorRepository.Update(sensor, cancellationToken);
     }
 

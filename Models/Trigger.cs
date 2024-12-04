@@ -27,7 +27,7 @@ public sealed class Trigger : Entity
 
     public TriggerTypeEnum TriggerType { get; set; }
 
-    public decimal? TriggerValue { get; set; }
+    public double? TriggerValue { get; set; }
 
     public DateTime? TriggerTime { get; set; }
 }
