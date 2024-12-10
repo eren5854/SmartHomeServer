@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmartHomeServer.DTOs.AppUserDto;
 using SmartHomeServer.DTOs.AuthDto;
 using SmartHomeServer.Services;
 
@@ -14,6 +15,13 @@ public class AuthController(
     public async Task<IActionResult> Login(LoginDto request, CancellationToken cancellationToken)
     {
         var response = await authService.Login(request, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Signup(CreateAppUserDto request, CancellationToken cancellationToken)
+    {
+        var response = await authService.Signup(request, cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
 

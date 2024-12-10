@@ -20,7 +20,7 @@ public sealed class RoomRepository(
 
     public async Task<Result<List<Room>>> GetAllByUserId(Guid Id, CancellationToken cancellationToken)
     {
-        var rooms = await context.Rooms.Where(p => p.AppUserId == Id).ToListAsync(cancellationToken);
+        var rooms = await context.Rooms.Where(p => p.AppUserId == Id).Include(i => i.Sensors).ToListAsync(cancellationToken);
         return Result<List<Room>>.Succeed(rooms);
     }
 

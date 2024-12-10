@@ -1,14 +1,19 @@
-﻿using ED.Result;
+﻿using AutoMapper;
+using ED.GenericRepository;
+using ED.Result;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SmartHomeServer.DTOs.AppUserDto;
 using SmartHomeServer.DTOs.AuthDto;
 using SmartHomeServer.Models;
+using System.Security.Cryptography;
 
 namespace SmartHomeServer.Services;
 
 public sealed class AuthService(
     UserManager<AppUser> userManager,
-    IJwtProvider jwtProvider)
+    IJwtProvider jwtProvider,
+    IMapper mapper)
 {
     public async Task<Result<LoginResponseDto>> Login(LoginDto request, CancellationToken cancellationToken)
     {
@@ -30,6 +35,36 @@ public sealed class AuthService(
 
         var loginResponse = await jwtProvider.CreateToken(user);
         return loginResponse;
+    }
+
+    public async Task<Result<string>> Signup(CreateAppUserDto request, CancellationToken cancellationToken)
+    {
+        var isEmailExists = await userManager.Users.AnyAsync(x => x.Email == request.Email);
+        if (isEmailExists)
+        {
+            return Result<string>.Failure("Email already exists");
+        }
+
+        var isUserNameExists = await userManager.Users.AnyAsync(x => x.UserName == request.UserName);
+        if (isUserNameExists)
+        {
+            return Result<string>.Failure("User name already exists");
+        }
+
+        AppUser user = mapper.Map<AppUser>(request);
+        user.CreatedBy = request.UserName;
+        user.CreatedDate = DateTime.Now;
+        user.EmailConfirmed = true;
+        user.IsActive = true;
+        user.SecretToken = GenerateApiKey();
+
+
+        IdentityResult result = await userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
+        {
+            return Result<string>.Failure("Record could not be created.");
+        }
+        return Result<string>.Succeed("User registration successful.");
     }
 
     public async Task<Result<string>> ChangePassword(ChangePasswordDto request, CancellationToken cancellationToken)
@@ -87,5 +122,14 @@ public sealed class AuthService(
         }
 
         return Result<string>.Succeed("New password is successful");
+    }
+
+    public static string GenerateApiKey()
+    {
+        using (var hmac = new HMACSHA256())
+        {
+            var key = Convert.ToBase64String(hmac.Key);
+            return key.Replace("+", "").Replace("/", "").Replace("=", "");
+        }
     }
 }
