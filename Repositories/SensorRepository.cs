@@ -12,8 +12,9 @@ using System.Security.Cryptography;
 namespace SmartHomeServer.Repositories;
 
 public sealed class SensorRepository(
-    ApplicationDbContext context,
-    IHubContext<SensorHub> hubContext)
+    ApplicationDbContext context
+    //IHubContext<SensorHub> hubContext
+    )
 {
     public async Task<Result<string>> Create(Sensor sensor, CancellationToken cancellationToken)
     {
@@ -28,14 +29,14 @@ public sealed class SensorRepository(
 
         string type = sensor.SensorType switch
         {
-            SensorTypeEnum.Relay => "RLY01",
+            SensorTypeEnum.Light => "LMP01",
             SensorTypeEnum.Temperature => "TMP01",
             SensorTypeEnum.Humidity => "HMD01",
+            SensorTypeEnum.Relay => "RLY01",
             SensorTypeEnum.Ldr => "LDR01",
             SensorTypeEnum.Water => "WTR01",
             SensorTypeEnum.Pressure => "PRS01",
             SensorTypeEnum.Motion => "MTN01",
-            SensorTypeEnum.Gas => "GAS01",
             SensorTypeEnum.Speed => "SPD01",
             _ => "OTH01"
         };

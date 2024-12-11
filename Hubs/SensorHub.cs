@@ -30,7 +30,7 @@ public sealed class SensorHub(
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         string serialNo;
-        Sensors.TryGetValue(Context.ConnectionId, out serialNo);
+        Sensors.TryGetValue(Context.ConnectionId, out serialNo!);
         Sensor? sensor = await context.Sensors.FindAsync(serialNo);
         if (sensor is not null)
         {

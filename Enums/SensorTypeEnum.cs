@@ -3,13 +3,13 @@
 public enum SensorTypeEnum
 {
     Other = 0,
-    Relay = 1,
-    Temperature = 2,
-    Humidity = 3,
-    Ldr = 4,
-    Water = 5,
-    Pressure = 6,
-    Motion = 7,
-    Gas = 8,
+    Light = 1,
+    Temperature = 3,
+    Humidity = 4,
+    Relay = 2,
+    Ldr = 5,
+    Water = 6,
+    Pressure = 7,
+    Motion = 8,
     Speed = 9
 }

@@ -31,7 +31,7 @@ public sealed class ScenarioRepository(
     {
         var scenario = await context.Scenarios
             .Include(s => s.Trigger)
-            .ThenInclude(t => t.Action)
+            .ThenInclude(t => t!.Action)
             .FirstOrDefaultAsync(s => s.Id == Id, cancellationToken);
 
         if (scenario is null)

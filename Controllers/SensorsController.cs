@@ -57,6 +57,7 @@ public sealed class SensorsController(
 
 
     //Esp
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetBySecretKey(string SecretKey, CancellationToken cancellationToken)
     {

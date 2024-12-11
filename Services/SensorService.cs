@@ -117,10 +117,10 @@ public sealed class SensorService(
 
         if(sensor.SecretKey != request.SecretKey)
         {
-            return Result<string>.Failure("Seri numara hatalı!!");
+            return Result<string>.Failure("Secret Key hatalı!!");
         }
 
-        if (request.SensorType == SensorTypeEnum.Relay)
+        if (request.SensorType == SensorTypeEnum.Light)
         {
             if (request.Data1 == 1 && sensor.Data1 == 0)
             {

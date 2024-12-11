@@ -26,11 +26,12 @@ public sealed class RoomRepository(
          rooms.Select(s=> new GetRoomDto(
              s.Id,
              s.RoomName,
-             s.RoomDescription,
+             s.RoomDescription!,
              new List<GetAllSensorDto>(
-                 s.Sensors.Select(sensor => new GetAllSensorDto(
+                 s.Sensors!.Select(sensor => new GetAllSensorDto(
                       sensor.Id,
                  sensor.SensorName,
+                 sensor.SecretKey!,
                  sensor.SerialNo,
                  sensor.Status ?? string.Empty,
                  sensor.SensorType,
@@ -65,6 +66,7 @@ public sealed class RoomRepository(
              room.Sensors!.Select(sensor => new GetAllSensorDto(
                  sensor.Id,
                  sensor.SensorName,
+                 sensor.SecretKey!,
                  sensor.SerialNo,
                  sensor.Status ?? string.Empty,
                  sensor.SensorType,
