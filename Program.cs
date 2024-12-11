@@ -64,6 +64,8 @@ builder.Services.AddScoped<RoomService>();
 builder.Services.AddScoped<ScenarioRepository>();
 builder.Services.AddScoped<ScenarioService>();
 
+builder.Services.AddScoped<LightTimeLogRepository>();
+
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 builder.Services.AddControllers();

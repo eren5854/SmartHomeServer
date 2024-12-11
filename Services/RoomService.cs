@@ -24,7 +24,7 @@ public sealed class RoomService(
         return await roomRepository.GetAll(cancellationToken);
     }
 
-    public async Task<Result<List<Room>>> GetAllByUserId(Guid Id, CancellationToken cancellationToken)
+    public async Task<Result<List<GetRoomDto>>> GetAllByUserId(Guid Id, CancellationToken cancellationToken)
     {
         return await roomRepository.GetAllByUserId(Id, cancellationToken);
     }

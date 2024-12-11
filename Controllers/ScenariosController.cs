@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
 using SmartHomeServer.DTOs.ScenarioDto;
 using SmartHomeServer.Services;
 
 namespace SmartHomeServer.Controllers;
 
+[Authorize(AuthenticationSchemes = "Bearer")]
 public sealed class ScenariosController(
     ScenarioService scenarioService) : ApiController
 {

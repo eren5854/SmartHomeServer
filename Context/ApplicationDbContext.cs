@@ -20,6 +20,8 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     public DbSet<Trigger> Triggers { get; set; }
     public DbSet<Models.Action> Actions { get; set; }
 
+    public DbSet<LightTimeLog> LightTimeLogs { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Sensor>()

@@ -60,13 +60,9 @@ public sealed class SensorRepository(
 
     public async Task<Result<List<Sensor>>> GetAllSensorByUserId(Guid Id, CancellationToken cancellation)
     {
-        var sensors = await context.Sensors.Where(p => p.AppUserId == Id).ToListAsync(cancellation);
+        var sensors = await context.Sensors.Where(p => p.AppUserId == Id).Include(i => i.Room).Include(i => i.LightTimeLogs).ToListAsync(cancellation);
         return Result<List<Sensor>>.Succeed(sensors);
     }
-
-
-
-
     public async Task<Result<GetAllSensorDataDto>> GetBySecretKey(string SecretKey, CancellationToken cancellationToken)
     {
         GetAllSensorDataDto? sensor = await context.Sensors.Where(p => p.SecretKey == SecretKey).Select(s => new GetAllSensorDataDto(
@@ -94,6 +90,7 @@ public sealed class SensorRepository(
         Sensor? sensor = await context.Sensors
             .Where(p => p.Id == Id)
             .Include(i => i.Room)
+            .Include(i => i.LightTimeLogs)
             .FirstOrDefaultAsync(cancellationToken);
         if (sensor is null)
         {

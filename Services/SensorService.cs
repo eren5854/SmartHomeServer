@@ -2,6 +2,7 @@
 using ED.Result;
 using Microsoft.AspNetCore.SignalR;
 using SmartHomeServer.DTOs.SensorDto;
+using SmartHomeServer.Enums;
 using SmartHomeServer.Hubs;
 using SmartHomeServer.Middlewares;
 using SmartHomeServer.Models;
@@ -11,6 +12,7 @@ namespace SmartHomeServer.Services;
 
 public sealed class SensorService(
     SensorRepository sensorRepository,
+    LightTimeLogRepository lightTimeLogRepository,
     IHubContext<SensorHub> hubContext,
     IMapper mapper)
 {
@@ -48,6 +50,12 @@ public sealed class SensorService(
         if (sensor is null)
         {
             return Result<string>.Failure("Sensor bulunamadı");
+        }
+
+        if (sensor.SensorType != request.SensorType)
+        {
+            sensor.SensorType = request.SensorType;
+            sensor.SerialNo = await sensorRepository.CreateSerialNo(sensor);
         }
 
         mapper.Map(request, sensor);
@@ -112,13 +120,46 @@ public sealed class SensorService(
             return Result<string>.Failure("Seri numara hatalı!!");
         }
 
+        if (request.SensorType == SensorTypeEnum.Relay)
+        {
+            if (request.Data1 == 1 && sensor.Data1 == 0)
+            {
+                LightTimeLog lightTimeLog = new()
+                {
+                    SensorId = sensor.Id,
+                    StartDate = DateTime.Now,
+                    OpenCount = 1,
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = "Admin"
+                };
+                await lightTimeLogRepository.Create(lightTimeLog, cancellationToken);
+
+            }
+            
+            else if(request.Data1 == 0 && sensor.Data1 == 1)
+            {
+                LightTimeLog? lightTimeLog = lightTimeLogRepository.GetBySensorId(sensor.Id);
+                if (lightTimeLog is not null)
+                {
+                    lightTimeLog!.FinishDate = DateTime.Now;
+                    if (lightTimeLog.StartDate.HasValue && lightTimeLog.FinishDate.HasValue)
+                    {
+                        lightTimeLog.TimeCount = (lightTimeLog.FinishDate.Value - lightTimeLog.StartDate.Value).TotalSeconds;
+                    }
+                    lightTimeLog.UpdatedDate = DateTime.Now;
+                    lightTimeLog.UpdatedBy = "Admin";
+
+                    await lightTimeLogRepository.Update(lightTimeLog, cancellationToken);
+                }
+            }
+
+        }
+
         mapper.Map(request, sensor);
         sensor.UpdatedBy = "Admin";
         sensor.UpdatedDate = DateTime.Now;
 
         await hubContext.Clients.All.SendAsync("Sensor", sensor);
-
-
 
         return await sensorRepository.Update(sensor, cancellationToken);
     }

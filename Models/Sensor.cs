@@ -18,7 +18,7 @@ public sealed class Sensor : Entity
     public Guid? AppUserId { get; set; }
     public AppUser? AppUser { get; set; }
 
-    public object RoomInfo => new
+    public object? RoomInfo => new
     {
         RoomId = RoomId,
         RoomName = Room!.RoomName,
@@ -29,6 +29,8 @@ public sealed class Sensor : Entity
     public Guid? RoomId { get; set; }
     [JsonIgnore]
     public Room? Room { get; set; }
+
+    public List<LightTimeLog>? LightTimeLogs { get; set; }
 
     public double? Data1 { get; set; }
     public double? Data2 { get; set; }
