@@ -1,5 +1,4 @@
-﻿using ED.GenericRepository;
-using ED.Result;
+﻿using ED.Result;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeServer.Context;
@@ -7,13 +6,11 @@ using SmartHomeServer.DTOs.SensorDto;
 using SmartHomeServer.Enums;
 using SmartHomeServer.Hubs;
 using SmartHomeServer.Models;
-using System.Security.Cryptography;
 
 namespace SmartHomeServer.Repositories;
 
 public sealed class SensorRepository(
     ApplicationDbContext context
-    //IHubContext<SensorHub> hubContext
     )
 {
     public async Task<Result<string>> Create(Sensor sensor, CancellationToken cancellationToken)
@@ -61,7 +58,12 @@ public sealed class SensorRepository(
 
     public async Task<Result<List<Sensor>>> GetAllSensorByUserId(Guid Id, CancellationToken cancellation)
     {
-        var sensors = await context.Sensors.Where(p => p.AppUserId == Id).Include(i => i.Room).Include(i => i.LightTimeLogs).ToListAsync(cancellation);
+        var sensors = await context.Sensors
+            .Where(p => p.AppUserId == Id)
+            .Include(i => i.Room)
+            .Include(i => i.LightTimeLogs)
+            .ToListAsync(cancellation);
+
         return Result<List<Sensor>>.Succeed(sensors);
     }
     public async Task<Result<GetAllSensorDataDto>> GetBySecretKey(string SecretKey, CancellationToken cancellationToken)

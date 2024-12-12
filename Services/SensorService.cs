@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using ED.Result;
+using Hangfire;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using SmartHomeServer.BackgroundServices;
 using SmartHomeServer.DTOs.SensorDto;
 using SmartHomeServer.Enums;
 using SmartHomeServer.Hubs;
@@ -159,7 +162,15 @@ public sealed class SensorService(
         sensor.UpdatedBy = "Admin";
         sensor.UpdatedDate = DateTime.Now;
 
-        await hubContext.Clients.All.SendAsync("Sensor", sensor);
+        if (request.SensorType == SensorTypeEnum.Temperature)
+        {
+            await hubContext.Clients.All.SendAsync("Temp", sensor);
+
+        }
+        if (request.SensorType == SensorTypeEnum.Light)
+        {
+            await hubContext.Clients.All.SendAsync("Lights", sensor);
+        }
 
         return await sensorRepository.Update(sensor, cancellationToken);
     }

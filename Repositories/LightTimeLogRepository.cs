@@ -42,12 +42,13 @@ public sealed class LightTimeLogRepository(
             .Where(p => p.SensorId == id &&
                         p.StartDate.HasValue &&
                         p.StartDate.Value.Date == today)
+            .OrderBy(o => o.StartDate)
             .ToListAsync(cancellationToken);
 
         return Result<List<LightTimeLog>>.Succeed(lightTimeLogs);
     }
 
-    public async Task<Result<List<LightTimeLog>>> GetAllBySensorIdWeekly(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<double>> GetAllBySensorIdWeekly(Guid id, CancellationToken cancellationToken)
     {
         var today = DateTime.Now.Date; // Bugünün tarihini al (saat kısmı 00:00:00 olacak şekilde)
         var startOfWeek = today.AddDays(-(int)today.DayOfWeek + 1); // Haftanın başlangıcı (Pazartesi)
@@ -60,7 +61,43 @@ public sealed class LightTimeLogRepository(
                         p.StartDate.Value.Date <= endOfWeek)
             .ToListAsync(cancellationToken);
 
-        return Result<List<LightTimeLog>>.Succeed(lightTimeLogs);
+        double total = lightTimeLogs.Sum(log => log.TimeCount ?? 0);
+
+        return Result<double>.Succeed(total);
+    }
+
+    public async Task<Result<Dictionary<DateTime, double>>> GetDailyTotalsBySensorIdWeekly(Guid id, CancellationToken cancellationToken)
+    {
+        var today = DateTime.Now.Date; // Bugünün tarihini al (saat kısmı 00:00:00 olacak şekilde)
+        var startOfWeek = today.AddDays(-(int)today.DayOfWeek + 1); // Haftanın başlangıcı (Pazartesi)
+        var endOfWeek = startOfWeek.AddDays(6); // Haftanın sonu (Pazar)
+
+        // Haftanın başından sonuna kadar olan verileri getir
+        var lightTimeLogs = await context.LightTimeLogs
+            .Where(p => p.SensorId == id &&
+                        p.StartDate.HasValue &&
+                        p.StartDate.Value.Date >= startOfWeek &&
+                        p.StartDate.Value.Date <= endOfWeek)
+            .ToListAsync(cancellationToken);
+
+        // Her gün için toplam TimeCount hesapla
+        var dailyTotals = lightTimeLogs
+            .GroupBy(log => log.StartDate!.Value.Date) // Tarihe göre grupla
+            .ToDictionary(
+                group => group.Key, // Tarih
+                group => group.Sum(log => log.TimeCount ?? 0) // O günün toplam TimeCount'u
+            );
+
+        // Haftanın her gününü (Pazartesi'den Pazar'a) ekle ve eksik günler için toplamı 0 yap
+        for (var date = startOfWeek; date <= endOfWeek; date = date.AddDays(1))
+        {
+            if (!dailyTotals.ContainsKey(date))
+            {
+                dailyTotals[date] = 0;
+            }
+        }
+
+        return Result<Dictionary<DateTime, double>>.Succeed(dailyTotals);
     }
 
 

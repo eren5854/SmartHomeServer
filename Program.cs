@@ -65,8 +65,11 @@ builder.Services.AddScoped<ScenarioRepository>();
 builder.Services.AddScoped<ScenarioService>();
 
 builder.Services.AddScoped<LightTimeLogRepository>();
+builder.Services.AddScoped<LightTimeLogService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+
+builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -114,6 +117,7 @@ app.UseHangfireDashboard();
 
 RecurringJob.AddOrUpdate<TimeBackgroundService>(x => x.ValueTrigger(), "*/10 * * * * *");
 RecurringJob.AddOrUpdate<TimeBackgroundService>(x => x.TimeTrigger(), Cron.Minutely());
+//RecurringJob.AddOrUpdate<AutoGetBackgroundService>(x => x.GetAllSensor(), Cron.Minutely());
 
 app.UseHttpsRedirection();
 

@@ -21,8 +21,8 @@ public sealed class Sensor : Entity
     public object? RoomInfo => new
     {
         RoomId = RoomId,
-        RoomName = Room!.RoomName,
-        RoomDescription = Room.RoomDescription,
+        RoomName = Room?.RoomName,
+        RoomDescription = Room?.RoomDescription,
     };
 
     [JsonIgnore]

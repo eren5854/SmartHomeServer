@@ -65,6 +65,7 @@ public sealed class SensorsController(
         return StatusCode(response.StatusCode, response);
     }
 
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> UpdateSensorData(UpdateSensorDataDto request, CancellationToken cancellationToken)
     {
