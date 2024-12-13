@@ -2,6 +2,6 @@
 
 public enum ActionTypeEnum
 {
-    Deactive = 0,
+    Email = 0,
     Active = 1
 }

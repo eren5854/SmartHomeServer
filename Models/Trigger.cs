@@ -9,10 +9,10 @@ public sealed class Trigger : Entity
     //public Guid ScenarioId { get; set; }
     //public Scenario Scenario { get; set; } = default!;
 
-    public object ActionInfo => new
+    public object? ActionInfo => new
     {
         ActionId = ActionId,
-        ActionSensorId = Action!.SensorId,
+        ActionSensorInfo = Action!.SensorInfo,
         Actiontype = Action.ActionType,
         ActionValue = Action.Value,
     };
@@ -22,7 +22,17 @@ public sealed class Trigger : Entity
     [JsonIgnore]
     public Action? Action { get; set; }
 
+
+    public object? SensorInfo => new
+    {
+        SensorName = Sensor?.SensorName,
+        SerialNo = Sensor?.SerialNo,
+        Data1 = Sensor?.Data1
+    };
+
+    [JsonIgnore]
     public Guid? SensorId { get; set; }
+    [JsonIgnore]
     public Sensor? Sensor { get; set; } = default!;
 
     public TriggerTypeEnum TriggerType { get; set; }

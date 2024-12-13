@@ -2,6 +2,7 @@
 using ED.Result;
 using Microsoft.AspNetCore.Http.Metadata;
 using SmartHomeServer.DTOs.ScenarioDto;
+using SmartHomeServer.Enums;
 using SmartHomeServer.Models;
 using SmartHomeServer.Repositories;
 
@@ -14,6 +15,17 @@ public sealed class ScenarioService(
     public async Task<Result<string>> Create(CreateScenarioDto request, CancellationToken cancellationToken)
     {
         Scenario scenario = mapper.Map<Scenario>(request);
+        if (request.TriggerType == TriggerTypeEnum.Time)
+        {
+            scenario.Trigger!.SensorId = null;
+            scenario.Trigger.TriggerValue = null;
+
+        }
+
+        if (request.TriggerType == TriggerTypeEnum.Value)
+        {
+            scenario.Trigger!.TriggerTime = null;
+        }
         scenario.CreatedDate = DateTime.Now;
         scenario.CreatedBy = "Admin";
 
@@ -59,6 +71,18 @@ public sealed class ScenarioService(
         scenario.UpdatedDate = DateTime.Now;
         scenario.UpdatedBy = "Admin";
 
+        return await scenarioRepository.Update(scenario, cancellationToken);
+    }
+
+    public async Task<Result<string>> UpdateIsActive(Guid Id, CancellationToken cancellationToken)
+    {
+        Scenario? scenario = scenarioRepository.GetById(Id);
+        if (scenario is null)
+        {
+            return Result<string>.Failure("Senaryo bulunamadı");
+        }
+
+        scenario.IsActive = !scenario.IsActive;
         return await scenarioRepository.Update(scenario, cancellationToken);
     }
 

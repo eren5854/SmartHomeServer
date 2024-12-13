@@ -18,7 +18,14 @@ public sealed class ScenarioRepository(
 
     public async Task<Result<List<Scenario>>> GetAllScenarioByUserId(Guid Id, CancellationToken cancellationToken)
     {
-        var scenarios = await context.Scenarios.Where(p => p.AppUserId == Id).Include(i => i.Trigger).ThenInclude(i => i!.Action).ToListAsync(cancellationToken);
+        var scenarios = await context.Scenarios
+     .Where(p => p.AppUserId == Id)
+     .Include(i => i.Trigger)
+         .ThenInclude(i => i!.Sensor) // Trigger'daki Sensor bilgisini dahil et
+     .Include(i => i.Trigger)
+         .ThenInclude(i => i!.Action) // Trigger'daki Action bilgisini dahil et
+         .ThenInclude(a => a.Sensor) // Action'daki Sensor bilgisini dahil et
+     .ToListAsync(cancellationToken);
         return Result<List<Scenario>>.Succeed(scenarios);
     }
 
