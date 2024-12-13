@@ -11,6 +11,7 @@ public sealed class Action : Entity
 
     public object? SensorInfo => new
     {
+        SensorId = SensorId,
         SensorName = Sensor?.SensorName,
         SerialNo = Sensor?.SerialNo,
         Data1 = Sensor?.Data1

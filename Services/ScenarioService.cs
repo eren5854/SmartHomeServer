@@ -59,6 +59,11 @@ public sealed class ScenarioService(
         return await scenarioRepository.GetAllScenarioByUserId(Id, cancellationToken);
     }
 
+    public async Task<Result<Scenario>> GetById(Guid Id, CancellationToken cancellationToken)
+    {
+        return await scenarioRepository.GetById(Id, cancellationToken);
+    }
+
     public async Task<Result<string>> Update(UpdateScenarioDto request, CancellationToken cancellationToken)
     {
         Scenario? scenario = scenarioRepository.GetById(request.Id);
@@ -68,6 +73,17 @@ public sealed class ScenarioService(
         }
 
         mapper.Map(request, scenario);
+        if (request.TriggerType == TriggerTypeEnum.Time)
+        {
+            scenario.Trigger!.SensorId = null;
+            scenario.Trigger.TriggerValue = null;
+
+        }
+
+        if (request.TriggerType == TriggerTypeEnum.Value)
+        {
+            scenario.Trigger!.TriggerTime = null;
+        }
         scenario.UpdatedDate = DateTime.Now;
         scenario.UpdatedBy = "Admin";
 

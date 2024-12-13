@@ -25,12 +25,12 @@ public sealed class Trigger : Entity
 
     public object? SensorInfo => new
     {
+        SensorId = SensorId,
         SensorName = Sensor?.SensorName,
         SerialNo = Sensor?.SerialNo,
         Data1 = Sensor?.Data1
     };
 
-    [JsonIgnore]
     public Guid? SensorId { get; set; }
     [JsonIgnore]
     public Sensor? Sensor { get; set; } = default!;

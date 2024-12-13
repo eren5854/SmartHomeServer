@@ -29,6 +29,20 @@ public sealed class ScenarioRepository(
         return Result<List<Scenario>>.Succeed(scenarios);
     }
 
+    public async Task<Result<Scenario>> GetById(Guid Id, CancellationToken cancellationToken)
+    {
+        var scenario = await context.Scenarios
+            .Where(p => p.Id == Id)
+            .Include(i => i.Trigger)
+                .ThenInclude(i => i!.Sensor) // Trigger'daki Sensor bilgisini dahil et
+            .Include(i => i.Trigger)
+                .ThenInclude(i => i!.Action) // Trigger'daki Action bilgisini dahil et
+                .ThenInclude(a => a.Sensor) // Action'daki Sensor bilgisini dahil et
+            .FirstOrDefaultAsync();
+
+        return Result<Scenario>.Succeed(scenario!);
+    }
+
     public Scenario? GetById(Guid Id)
     {
         return context.Scenarios.SingleOrDefault(s => s.Id == Id);

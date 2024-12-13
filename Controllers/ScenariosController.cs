@@ -24,6 +24,13 @@ public sealed class ScenariosController(
         return StatusCode(response.StatusCode, response);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetById(Guid Id, CancellationToken cancellationToken)
+    {
+        var response = await scenarioService.GetById(Id, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Update(UpdateScenarioDto request, CancellationToken cancellationToken)
     {
