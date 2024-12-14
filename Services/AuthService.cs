@@ -20,8 +20,7 @@ public sealed class AuthService(
         string emailOrUserName = request.EmailOrUserName.ToUpper();
         AppUser? user = await userManager
             .Users.Where(p => !p.IsDeleted)
-            .FirstOrDefaultAsync(p => p.Email == request.EmailOrUserName ||
-            p.UserName == request.EmailOrUserName);
+            .FirstOrDefaultAsync(p => p.Email == request.EmailOrUserName);
         if (user is null)
         {
             return Result<LoginResponseDto>.Failure("Kullanıcı bulunamadı");

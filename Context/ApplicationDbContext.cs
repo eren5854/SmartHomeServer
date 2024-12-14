@@ -22,6 +22,8 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
 
     public DbSet<LightTimeLog> LightTimeLogs { get; set; }
 
+    public DbSet<TemplateSetting> TemplateSettings { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Sensor>()

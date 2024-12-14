@@ -38,6 +38,19 @@ public sealed class AppUserService(
         return await appUserRepository.Update(appUser, cancellationToken);
     }
 
+    public async Task<Result<string>> UpdateSecretToken(Guid Id, CancellationToken cancellationToken)
+    {
+        AppUser? appUser = appUserRepository.GetById(Id);
+        if (appUser is null)
+        {
+            return Result<string>.Failure("Kullanıcı bulunamadı!");
+        }
+
+        appUser.SecretToken = GenerateApiKey();
+
+        return await appUserRepository.Update(appUser, cancellationToken);
+    }
+
     //Sadece admin için
     public async Task<Result<string>> DeleteById(Guid Id, CancellationToken cancellationToken)
     {

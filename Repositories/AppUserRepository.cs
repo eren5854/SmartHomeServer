@@ -31,6 +31,16 @@ public sealed class AppUserRepository(
         return Result<AppUser>.Succeed(appUser);
     }
 
+    public async Task<Result<AppUser>> GetBySecretToken(string SecretToken, CancellationToken cancellation)
+    {
+        AppUser? appUser = await context.Users.Include(p => p.Sensors).SingleOrDefaultAsync(s => s.SecretToken == SecretToken);
+        if (appUser is null)
+        {
+            return Result<AppUser>.Failure("Kullanıcı bulunamadı");
+        }
+        return Result<AppUser>.Succeed(appUser);
+    }
+
     public AppUser? GetById(Guid Id)
     {
         return context.Users.SingleOrDefault(s => s.Id == Id);

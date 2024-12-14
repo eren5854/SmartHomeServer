@@ -109,7 +109,8 @@ public sealed class SensorRepository(
 
     public Sensor? GetBySecretKey(string SecretKey)
     {
-        return context.Sensors.SingleOrDefault(s => s.SecretKey == SecretKey);
+        return context.Sensors.SingleOrDefault(s => s.SecretKey == SecretKey); //Sensorlere ait secret key
+        //return context.Sensors.SingleOrDefault(s => s.AppUser.SecretToken == SecretKey);//User ait secret token
     }
 
     public async Task<Result<string>> DeleteById(Guid Id, CancellationToken cancellationToken)

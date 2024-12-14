@@ -23,7 +23,8 @@ public class AutoGetBackgroundService(
                s.Data3,
                s.Data4,
                s.Data5,
-               s.Data6))
+               s.Data6
+               ))
            .ToList();
 
         hubContext.Clients.All.SendAsync("Sensors", sensors);
