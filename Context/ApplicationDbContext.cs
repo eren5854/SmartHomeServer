@@ -14,7 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
 
     public DbSet<Sensor> Sensors { get; set; }
     public DbSet<Room> Rooms { get; set; }
-    public DbSet<TvCommand> TvCommands { get; set; }
+    public DbSet<RemoteControl> RemoteControls { get; set; }
 
     public DbSet<Scenario> Scenarios { get; set; }
     public DbSet<Trigger> Triggers { get; set; }
@@ -32,6 +32,12 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
             .HasForeignKey(sensor => sensor.RoomId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Entity<RemoteControl>()
+            .HasOne(remote => remote.AppUser)
+            .WithMany(appUser => appUser.RemoteControls)
+            .HasForeignKey(remote => remote.AppUserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.Entity<Scenario>()
             .HasOne(p => p.Trigger)
             .WithOne()
@@ -42,6 +48,12 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
             .HasOne(p => p.Action)
             .WithOne()
             .HasForeignKey<Trigger>(p => p.ActionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<TemplateSetting>()
+            .HasOne(p => p.AppUser)
+            .WithOne()
+            .HasForeignKey<TemplateSetting>(p => p.AppUserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         //builder.Entity<Trigger>()

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Azure.Core;
 using SmartHomeServer.DTOs.AppUserDto;
+using SmartHomeServer.DTOs.RemoteControlDto;
 using SmartHomeServer.DTOs.RoomDto;
 using SmartHomeServer.DTOs.ScenarioDto;
 using SmartHomeServer.DTOs.SensorDto;
+using SmartHomeServer.DTOs.TemplateSettingDto;
 using SmartHomeServer.DTOs.TriggerDto;
 using SmartHomeServer.Models;
 
@@ -54,5 +56,10 @@ public sealed class MappingProfile : Profile
             }));
 
         CreateMap<CreateTriggerDto, Trigger>();
+
+        CreateMap<UpdateTemplateSettingDto, TemplateSetting>();
+
+        CreateMap<CreateRemoteControlDto, RemoteControl>();
+        CreateMap<UpdateRemoteControlDataDto, RemoteControl>();
     }
 }

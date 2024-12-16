@@ -67,6 +67,9 @@ builder.Services.AddScoped<ScenarioService>();
 builder.Services.AddScoped<LightTimeLogRepository>();
 builder.Services.AddScoped<LightTimeLogService>();
 
+builder.Services.AddScoped<TemplateSettingRepository>();
+builder.Services.AddScoped<TemplateSettingService>();
+
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 builder.Services.AddProblemDetails();

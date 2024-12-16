@@ -6,12 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using SmartHomeServer.DTOs.AppUserDto;
 using SmartHomeServer.DTOs.AuthDto;
 using SmartHomeServer.Models;
+using SmartHomeServer.Repositories;
 using System.Security.Cryptography;
 
 namespace SmartHomeServer.Services;
 
 public sealed class AuthService(
     UserManager<AppUser> userManager,
+    TemplateSettingRepository templateSettingRepository,
     IJwtProvider jwtProvider,
     IMapper mapper)
 {
@@ -32,6 +34,8 @@ public sealed class AuthService(
             return Result<LoginResponseDto>.Failure("Şifre Yanlış");
         }
 
+         templateSettingRepository.CreateDefaultTemplate(user.Id);
+        
         var loginResponse = await jwtProvider.CreateToken(user);
         return loginResponse;
     }
@@ -57,12 +61,13 @@ public sealed class AuthService(
         user.IsActive = true;
         user.SecretToken = GenerateApiKey();
 
-
         IdentityResult result = await userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
         {
             return Result<string>.Failure("Record could not be created.");
         }
+
+
         return Result<string>.Succeed("User registration successful.");
     }
 
@@ -131,4 +136,6 @@ public sealed class AuthService(
             return key.Replace("+", "").Replace("/", "").Replace("=", "");
         }
     }
+
+    
 }
