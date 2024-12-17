@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
 using SmartHomeServer.Services;
 
 namespace SmartHomeServer.Controllers;
-
+[Authorize(AuthenticationSchemes = "Bearer")]
 public sealed class LightTimeLogsController(
     LightTimeLogService lightTimeLogService) : ApiController
 {

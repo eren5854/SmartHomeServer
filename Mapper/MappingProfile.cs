@@ -2,6 +2,7 @@
 using Azure.Core;
 using SmartHomeServer.DTOs.AppUserDto;
 using SmartHomeServer.DTOs.RemoteControlDto;
+using SmartHomeServer.DTOs.RemoteControlKeyDto;
 using SmartHomeServer.DTOs.RoomDto;
 using SmartHomeServer.DTOs.ScenarioDto;
 using SmartHomeServer.DTOs.SensorDto;
@@ -59,7 +60,28 @@ public sealed class MappingProfile : Profile
 
         CreateMap<UpdateTemplateSettingDto, TemplateSetting>();
 
+        //CreateMap<CreateRemoteControlDto, RemoteControl>()
+        //    .ForMember(dest => dest.RemoteControlKeys, opt => opt.MapFrom(src =>
+        //        src.CreateRemoteControlKeys.Select(key => new RemoteControlKey
+        //        {
+        //            KeyName = key.KeyName,
+        //            KeyCode = key.KeyCode
+        //        }).ToList()));
+
         CreateMap<CreateRemoteControlDto, RemoteControl>();
-        CreateMap<UpdateRemoteControlDataDto, RemoteControl>();
+
+        //CreateMap<UpdateRemoteControlDto, RemoteControl>()
+        //    .ForMember(dest => dest.RemoteControlKeys, opt => opt.MapFrom(src =>
+        //        src.UpdateRemoteControlKeys.Select(key => new RemoteControlKey
+        //        {
+        //            KeyName = key.KeyName,
+        //            KeyCode = key.KeyCode
+        //        }).ToList()));
+
+        CreateMap<UpdateRemoteControlDto, RemoteControl>();
+
+        CreateMap<UpdateRemoteControlKeyDto, RemoteControlKey>()
+          .ForMember(dest => dest.Id, opt => opt.Ignore());
+
     }
 }

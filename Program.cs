@@ -70,6 +70,12 @@ builder.Services.AddScoped<LightTimeLogService>();
 builder.Services.AddScoped<TemplateSettingRepository>();
 builder.Services.AddScoped<TemplateSettingService>();
 
+builder.Services.AddScoped<RemoteControlRepository>();
+builder.Services.AddScoped<RemoteControlService>();
+
+builder.Services.AddScoped<RemoteControlKeyRepository>();
+builder.Services.AddScoped<RemoteControlKeyService>();
+
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 builder.Services.AddProblemDetails();

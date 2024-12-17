@@ -1,12 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using SmartHomeServer.Context;
 using SmartHomeServer.Enums;
+using SmartHomeServer.Hubs;
 using SmartHomeServer.Models;
 
 namespace SmartHomeServer.BackgroundServices;
 
 public class TimeBackgroundService(
-    ApplicationDbContext context)
+    ApplicationDbContext context,
+    IHubContext<SensorHub> hubContext)
 {
     public void TimeTrigger()
     {
@@ -21,8 +24,8 @@ public class TimeBackgroundService(
                 TimeSpan triggerTimeSpan = triggerTime.Value.TimeOfDay;
                 TimeSpan currentTimeSpan = DateTime.Now.TimeOfDay;
 
-                TimeSpan lowerBound = currentTimeSpan.Subtract(TimeSpan.FromMinutes(2));
-                TimeSpan upperBound = currentTimeSpan.Add(TimeSpan.FromMinutes(2));
+                TimeSpan lowerBound = currentTimeSpan.Subtract(TimeSpan.FromSeconds(30));
+                TimeSpan upperBound = currentTimeSpan.Add(TimeSpan.FromSeconds(30));
 
                 Console.WriteLine(currentTimeSpan);
 
@@ -44,6 +47,7 @@ public class TimeBackgroundService(
 
                         context.Update(sensor);
                         context.SaveChanges();
+                        hubContext.Clients.All.SendAsync("Lights", sensor);
                         Console.WriteLine($"{scenario.ScenarioName} içerisindeki {scenario.Trigger.TriggerType} tetiklendi ve {scenario.Trigger.Action.SensorId} sensörün Data1 verisi güncellendi");
                     }
                     else

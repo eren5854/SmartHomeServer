@@ -1,5 +1,11 @@
-﻿namespace SmartHomeServer.DTOs.RemoteControlDto;
+﻿using SmartHomeServer.DTOs.RemoteControlKeyDto;
 
-public sealed class UpdateRemoteControlDto
-{
-}
+namespace SmartHomeServer.DTOs.RemoteControlDto;
+
+public sealed record UpdateRemoteControlDto(
+    Guid Id,
+    string Name,
+    string Description
+    //List<UpdateRemoteControlKeyDto> UpdateRemoteControlKeys,
+    //Guid AppUserId
+    );

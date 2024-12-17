@@ -15,7 +15,9 @@ public sealed class Sensor : Entity
 
     public SensorTypeEnum SensorType { get; set; } = SensorTypeEnum.Other;
 
+    [JsonIgnore]
     public Guid? AppUserId { get; set; }
+    [JsonIgnore]
     public AppUser? AppUser { get; set; }
 
     public object? RoomInfo => new

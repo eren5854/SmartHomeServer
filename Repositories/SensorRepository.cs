@@ -47,15 +47,6 @@ public sealed class SensorRepository(
         return $"SN{type}{formattedDate}{number:D3}";
     }
 
-    //public string GenerateSecretKey()
-    //{
-    //    using (var hmac = new HMACSHA256())
-    //    {
-    //        var key = Convert.ToBase64String(hmac.Key);
-    //        return key.Replace("+", "").Replace("/", "").Replace("=", "");
-    //    }
-    //}
-
     public async Task<Result<List<Sensor>>> GetAllSensorByUserId(Guid Id, CancellationToken cancellation)
     {
         var sensors = await context.Sensors

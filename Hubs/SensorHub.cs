@@ -1,24 +1,31 @@
-﻿using AutoMapper;
-using ED.Result;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using SmartHomeServer.Context;
-using SmartHomeServer.DTOs.SensorDto;
-using SmartHomeServer.Enums;
 using SmartHomeServer.Models;
-using SmartHomeServer.Repositories;
-using System.Threading;
+using System.Security.Claims;
 
 namespace SmartHomeServer.Hubs;
 
-public sealed class SensorHub(SensorRepository sensorRepository,
-    LightTimeLogRepository lightTimeLogRepository,
-    IMapper mapper) : Hub
+//[Authorize]
+public sealed class SensorHub : Hub
 {
     public async Task SendMessage(string user, string message)
     {
         await Clients.All.SendAsync("ReceiveMessage", user, message);
     }
+
+    public async Task SendSensorData(Sensor sensorData)
+    {
+        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (Guid.TryParse(userId, out var parsedUserId))
+        {
+            if (sensorData.AppUserId == parsedUserId)
+            {
+                await Clients.Caller.SendAsync("ReceiveSensorData", sensorData);
+            }
+        }
+    }
+
 
     //public static Dictionary<string, string> Sensors = new();
 

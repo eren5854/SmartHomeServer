@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     public DbSet<Sensor> Sensors { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<RemoteControl> RemoteControls { get; set; }
+    public DbSet<RemoteControlKey> RemoteControlKeys { get; set; }
 
     public DbSet<Scenario> Scenarios { get; set; }
     public DbSet<Trigger> Triggers { get; set; }
@@ -36,6 +37,12 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
             .HasOne(remote => remote.AppUser)
             .WithMany(appUser => appUser.RemoteControls)
             .HasForeignKey(remote => remote.AppUserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<RemoteControlKey>()
+            .HasOne(p => p.RemoteControl)
+            .WithMany(p => p.RemoteControlKeys)
+            .HasForeignKey(p => p.RemoteControlId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Scenario>()
