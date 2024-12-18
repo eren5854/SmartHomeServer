@@ -18,9 +18,9 @@ public sealed class Action : Entity
     };
 
     [JsonIgnore]
-    public Guid SensorId { get; set; } = default!;
+    public Guid? SensorId { get; set; }
     [JsonIgnore]
-    public Sensor Sensor { get; set; } = default!;
+    public Sensor? Sensor { get; set; }
 
     public ActionTypeEnum ActionType { get; set; }
 

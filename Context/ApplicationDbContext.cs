@@ -25,6 +25,8 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
 
     public DbSet<TemplateSetting> TemplateSettings { get; set; }
 
+    public DbSet<MailSetting> MailSettings { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Sensor>()
@@ -61,6 +63,12 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
             .HasOne(p => p.AppUser)
             .WithOne()
             .HasForeignKey<TemplateSetting>(p => p.AppUserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<MailSetting>()
+            .HasOne(p => p.AppUser)
+            .WithOne()
+            .HasForeignKey<MailSetting>(p => p.AppUserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         //builder.Entity<Trigger>()
