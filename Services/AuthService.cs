@@ -14,6 +14,7 @@ namespace SmartHomeServer.Services;
 public sealed class AuthService(
     UserManager<AppUser> userManager,
     TemplateSettingRepository templateSettingRepository,
+    MailSettingRepository mailSettingRepository,
     IJwtProvider jwtProvider,
     IMapper mapper)
 {
@@ -34,7 +35,8 @@ public sealed class AuthService(
             return Result<LoginResponseDto>.Failure("Şifre Yanlış");
         }
 
-         templateSettingRepository.CreateDefaultTemplate(user.Id);
+        templateSettingRepository.CreateDefaultTemplate(user.Id);
+        mailSettingRepository.CreateMailSetting(user.Id);
         
         var loginResponse = await jwtProvider.CreateToken(user);
         return loginResponse;
@@ -66,7 +68,6 @@ public sealed class AuthService(
         {
             return Result<string>.Failure("Record could not be created.");
         }
-
 
         return Result<string>.Succeed("User registration successful.");
     }

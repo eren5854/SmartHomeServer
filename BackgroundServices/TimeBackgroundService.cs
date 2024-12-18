@@ -6,6 +6,7 @@ using SmartHomeServer.Context;
 using SmartHomeServer.Enums;
 using SmartHomeServer.Hubs;
 using SmartHomeServer.Models;
+using ED.Result;
 
 namespace SmartHomeServer.BackgroundServices;
 
@@ -48,8 +49,21 @@ public class TimeBackgroundService(
                         sensor.Data1 = actionValue;
 
                         context.Update(sensor);
+                        Notification notification = new()
+                        {
+                            NotificationName = $"{sensor.SensorName} çalıştı",
+                            NotificationMessage = $"{triggerTime} zamanlı tetiklenme mekanizması sonucu {sensor.SensorName} adlı cihaz çalıştırıldı",
+                            NotificationType = NotificationTypeEnum.info,
+                            AppUserId = scenario.AppUserId,
+                            IsActive = true,
+                            IsDeleted = false,
+                            CreatedDate = DateTime.Now,
+                            CreatedBy = "Background Service"
+                        };
+                        context.Add(notification);
                         context.SaveChanges();
-                        hubContext.Clients.All.SendAsync("Lights", sensor);
+                        hubContext.Clients.All.SendAsync("Lights", Result<Sensor>.Succeed(sensor));
+                        hubContext.Clients.All.SendAsync("Notifications", Result<Notification>.Succeed(notification));
                         Console.WriteLine($"{scenario.ScenarioName} içerisindeki {scenario.Trigger.TriggerType} tetiklendi ve {scenario.Trigger.Action.SensorId} sensörün Data1 verisi güncellendi");
                     }
                     else
@@ -107,7 +121,23 @@ public class TimeBackgroundService(
                             actionSensor.Data1 = actionValue;
 
                             context.Update(actionSensor);
+
+                            Notification notification = new()
+                            {
+                                NotificationName = $"{actionSensor.SensorName} çalıştı",
+                                NotificationMessage = $"{triggerSensor.SensorName} adlı sensörün tetiklenme mekanizması sonucu {actionSensor.SensorName} adlı cihaz çalıştırıldı",
+                                NotificationType = NotificationTypeEnum.warning,
+                                AppUserId = scenario.AppUserId,
+                                IsActive = true,
+                                IsDeleted = false,
+                                CreatedDate = DateTime.Now,
+                                CreatedBy = "Background Service"
+                            };
+                            context.Add(notification);
+
                             context.SaveChanges();
+                            hubContext.Clients.All.SendAsync("Lights", Result<Sensor>.Succeed(actionSensor));
+                            hubContext.Clients.All.SendAsync("Notifications", Result<Notification>.Succeed(notification));
 
                             Console.WriteLine($"{scenario.ScenarioName} senaryo içerisindeki {scenario.Trigger.TriggerType} tetiklendi ve {scenario.Trigger.Action.SensorId} sensörün Data1 verisi güncellendi");
                         }
@@ -121,6 +151,21 @@ public class TimeBackgroundService(
                         MailSetting? mailSetting = context.MailSettings.Where(p => p.AppUserId == scenario.AppUserId).FirstOrDefault();
                         if(mailSetting is not null)
                         {
+                            Notification notification = new()
+                            {
+                                NotificationName = $"E-posta gönderildi",
+                                NotificationMessage = $"{triggerSensor.SensorName} adlı sensörün tetiklenme mekanizması sonucu {mailSetting.Email} adresine mail gönderildi",
+                                NotificationType = NotificationTypeEnum.errorr,
+                                AppUserId = scenario.AppUserId,
+                                IsActive = true,
+                                IsDeleted = false,
+                                CreatedDate = DateTime.Now,
+                                CreatedBy = "Background Service"
+                            };
+                            context.Add(notification);
+                            context.SaveChanges();
+                            hubContext.Clients.All.SendAsync("Notifications", Result<Notification>.Succeed(notification));
+
                             string body = CreateBody(triggerSensor.SensorName, triggerSensor.Data1);
                             string subject = "Uyarı!!";
 
@@ -143,6 +188,9 @@ public class TimeBackgroundService(
                                 null);
 
                             EmailService.SendEmailWithMailKitAsync(emailModel);
+
+                           
+                            Console.WriteLine("Mail başarılı bir şekilde gönderildi");
                         }
                         Console.WriteLine("Mail ayarları bulunamadı");
                     }

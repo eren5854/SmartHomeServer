@@ -17,15 +17,21 @@ public sealed class SensorHub : Hub
     {
         var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (Guid.TryParse(userId, out var parsedUserId))
+        if (Guid.TryParse(userId, out var parsedUserId) && sensorData.AppUserId == parsedUserId)
         {
-            if (sensorData.AppUserId == parsedUserId)
-            {
-                await Clients.Caller.SendAsync("ReceiveSensorData", sensorData);
-            }
+            await Clients.User(userId).SendAsync("ReceiveSensorData", sensorData);
         }
     }
 
+    public override async Task OnConnectedAsync()
+    {
+        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId != null)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+        }
+        await base.OnConnectedAsync();
+    }
 
     //public static Dictionary<string, string> Sensors = new();
 

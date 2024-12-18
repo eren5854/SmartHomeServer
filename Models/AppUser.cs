@@ -13,6 +13,7 @@ public sealed class AppUser : IdentityUser<Guid>
     public List<Sensor>? Sensors { get; set; }
     public List<Room>? Rooms { get; set; }
     public List<RemoteControl>? RemoteControls { get; set; }
+    public List<Notification> Notifications { get; set; }
 
     public UserRoleEnum Role { get; set; } = UserRoleEnum.User;
 

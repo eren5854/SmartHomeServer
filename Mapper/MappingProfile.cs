@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Azure.Core;
 using SmartHomeServer.DTOs.AppUserDto;
+using SmartHomeServer.DTOs.MailSettingDto;
 using SmartHomeServer.DTOs.RemoteControlDto;
 using SmartHomeServer.DTOs.RemoteControlKeyDto;
 using SmartHomeServer.DTOs.RoomDto;
@@ -83,5 +84,6 @@ public sealed class MappingProfile : Profile
         CreateMap<UpdateRemoteControlKeyDto, RemoteControlKey>()
           .ForMember(dest => dest.Id, opt => opt.Ignore());
 
+        CreateMap<UpdateMailSettingDto, MailSetting>();
     }
 }

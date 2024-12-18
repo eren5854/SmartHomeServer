@@ -164,13 +164,25 @@ public sealed class SensorService(
 
         if (request.SensorType == SensorTypeEnum.Temperature)
         {
-            await hubContext.Clients.All.SendAsync("Temp", sensor);
+            await hubContext.Clients.All.SendAsync("Temp", Result<Sensor>.Succeed(sensor));
 
         }
         if (request.SensorType == SensorTypeEnum.Light)
         {
-            await hubContext.Clients.All.SendAsync("Lights", sensor);
+            await hubContext.Clients.All.SendAsync("Lights", Result<Sensor>.Succeed(sensor));
         }
+
+        //if (request.SensorType == SensorTypeEnum.Temperature)
+        //{
+        //    await hubContext.Clients.User(sensor.AppUserId.ToString())
+        //        .SendAsync("Temp", sensor);
+        //}
+        //if (request.SensorType == SensorTypeEnum.Light)
+        //{
+        //    await hubContext.Clients.User(sensor.AppUserId.ToString())
+        //        .SendAsync("Lights", sensor);
+        //}
+
 
         return await sensorRepository.Update(sensor, cancellationToken);
     }

@@ -16,16 +16,13 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     public DbSet<Room> Rooms { get; set; }
     public DbSet<RemoteControl> RemoteControls { get; set; }
     public DbSet<RemoteControlKey> RemoteControlKeys { get; set; }
-
     public DbSet<Scenario> Scenarios { get; set; }
     public DbSet<Trigger> Triggers { get; set; }
     public DbSet<Models.Action> Actions { get; set; }
-
     public DbSet<LightTimeLog> LightTimeLogs { get; set; }
-
     public DbSet<TemplateSetting> TemplateSettings { get; set; }
-
     public DbSet<MailSetting> MailSettings { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -45,6 +42,12 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
             .HasOne(p => p.RemoteControl)
             .WithMany(p => p.RemoteControlKeys)
             .HasForeignKey(p => p.RemoteControlId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Notification>()
+            .HasOne(p => p.AppUser)
+            .WithMany(p => p.Notifications)
+            .HasForeignKey(p => p.AppUserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Scenario>()

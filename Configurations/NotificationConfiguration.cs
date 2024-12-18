@@ -4,18 +4,18 @@ using SmartHomeServer.Models;
 
 namespace SmartHomeServer.Configurations;
 
-public sealed class ScenarioConfiguration : IEntityTypeConfiguration<Scenario>
+public sealed class NotificationConfiguration : IEntityTypeConfiguration<Notification>
 {
-    public void Configure(EntityTypeBuilder<Scenario> builder)
+    public void Configure(EntityTypeBuilder<Notification> builder)
     {
-        builder.Property(p => p.ScenarioName)
+        builder.Property(p => p.NotificationName)
             .HasColumnType("varchar(300)")
             .HasMaxLength(300)
             .IsRequired();
 
-        builder.Property(p => p.ScenarioDescription)
-            .HasColumnType("varchar(1000)")
-            .HasMaxLength(1000)
+        builder.Property(p => p.NotificationMessage)
+            .HasColumnType("varchar(1500)")
+            .HasMaxLength(1500)
             .IsRequired();
 
         builder.HasQueryFilter(filter => !filter.IsDeleted);

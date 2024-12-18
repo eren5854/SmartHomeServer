@@ -45,8 +45,28 @@ builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.ConfigureOptions<JwtTokenSetupConfiguration>();
-builder.Services.AddAuthentication()
-    .AddJwtBearer();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    path.StartsWithSegments("/sensor-hub"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
+    });
 builder.Services.AddAuthorizationBuilder();
 
 builder.Services.AddScoped<AuthService>();
@@ -75,6 +95,12 @@ builder.Services.AddScoped<RemoteControlService>();
 
 builder.Services.AddScoped<RemoteControlKeyRepository>();
 builder.Services.AddScoped<RemoteControlKeyService>();
+
+builder.Services.AddScoped<MailSettingRepository>();
+builder.Services.AddScoped<MailSettingService>();
+
+builder.Services.AddScoped<NotificationRepository>();
+builder.Services.AddScoped<NotificationService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
@@ -130,6 +156,7 @@ RecurringJob.AddOrUpdate<TimeBackgroundService>(x => x.TimeTrigger(), Cron.Minut
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
