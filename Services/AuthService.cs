@@ -1,20 +1,20 @@
 ﻿using AutoMapper;
-using ED.GenericRepository;
 using ED.Result;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeServer.DTOs.AppUserDto;
 using SmartHomeServer.DTOs.AuthDto;
 using SmartHomeServer.Models;
-using SmartHomeServer.Repositories;
+using SmartHomeServer.Repositories.MailSettings;
+using SmartHomeServer.Repositories.TemplateSettings;
 using System.Security.Cryptography;
 
 namespace SmartHomeServer.Services;
 
 public sealed class AuthService(
     UserManager<AppUser> userManager,
-    TemplateSettingRepository templateSettingRepository,
-    MailSettingRepository mailSettingRepository,
+    ITemplateSettingRepository templateSettingRepository,
+    IMailSettingRepository mailSettingRepository,
     IJwtProvider jwtProvider,
     IMapper mapper)
 {

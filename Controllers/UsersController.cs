@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
 using SmartHomeServer.DTOs.AppUserDto;
-using SmartHomeServer.Services;
+using SmartHomeServer.Services.Users;
 
 namespace SmartHomeServer.Controllers;
 [Authorize(AuthenticationSchemes = "Bearer")]
 public sealed class UsersController(
-    AppUserService appUserService) : ApiController
+    IAppUserService appUserService) : ApiController
 {
     [HttpPost]
     public async Task<IActionResult> Update(UpdateAppUserDto request, CancellationToken cancellationToken)

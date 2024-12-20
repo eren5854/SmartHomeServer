@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
 using SmartHomeServer.DTOs.MailSettingDto;
-using SmartHomeServer.Services;
+using SmartHomeServer.Services.MailSettings;
 
 namespace SmartHomeServer.Controllers;
 
 public sealed class MailSettingsController(
-    MailSettingService mailSettingService) : ApiController
+    IMailSettingService mailSettingService) : ApiController
 {
     [HttpGet]
     public async Task<IActionResult> GetByUserId(Guid Id, CancellationToken cancellationToken)

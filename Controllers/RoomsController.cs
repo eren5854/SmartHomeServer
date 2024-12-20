@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
 using SmartHomeServer.DTOs.RoomDto;
-using SmartHomeServer.Services;
+using SmartHomeServer.Services.Rooms;
 
 namespace SmartHomeServer.Controllers;
 
 [Authorize(AuthenticationSchemes = "Bearer")]
 public sealed class RoomsController(
-    RoomService roomService) : ApiController
+    IRoomService roomService) : ApiController
 {
     [HttpPost]
     public async Task<IActionResult> Create(CreateRoomDto request, CancellationToken cancellationToken)

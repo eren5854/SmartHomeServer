@@ -11,8 +11,27 @@ using SmartHomeServer.Mapper;
 using SmartHomeServer.Middlewares;
 using SmartHomeServer.Models;
 using SmartHomeServer.Options;
-using SmartHomeServer.Repositories;
+using SmartHomeServer.Repositories.LightTimeLogs;
+using SmartHomeServer.Repositories.MailSettings;
+using SmartHomeServer.Repositories.Notifications;
+using SmartHomeServer.Repositories.RemoteControlKeys;
+using SmartHomeServer.Repositories.RemoteControls;
+using SmartHomeServer.Repositories.Rooms;
+using SmartHomeServer.Repositories.Scenarios;
+using SmartHomeServer.Repositories.Sensors;
+using SmartHomeServer.Repositories.TemplateSettings;
+using SmartHomeServer.Repositories.Users;
 using SmartHomeServer.Services;
+using SmartHomeServer.Services.LightTimeLogs;
+using SmartHomeServer.Services.MailSettings;
+using SmartHomeServer.Services.Notifications;
+using SmartHomeServer.Services.RemoteControlKeys;
+using SmartHomeServer.Services.RemoteControls;
+using SmartHomeServer.Services.Rooms;
+using SmartHomeServer.Services.Scenarios;
+using SmartHomeServer.Services.Sensors;
+using SmartHomeServer.Services.TemplateSettings;
+using SmartHomeServer.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,35 +91,35 @@ builder.Services.AddAuthorizationBuilder();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 
-builder.Services.AddScoped<AppUserRepository>();
-builder.Services.AddScoped<AppUserService>();
+builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
+builder.Services.AddScoped<IAppUserService, AppUserService>();
 
-builder.Services.AddScoped<SensorRepository>();
-builder.Services.AddScoped<SensorService>();
+builder.Services.AddScoped<ISensorRepository, SensorRepository>();
+builder.Services.AddScoped<ISensorService, SensorService>();
 
-builder.Services.AddScoped<RoomRepository>();
-builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 
-builder.Services.AddScoped<ScenarioRepository>();
-builder.Services.AddScoped<ScenarioService>();
+builder.Services.AddScoped<IScenarioRepository, ScenarioRepository>();
+builder.Services.AddScoped<IScenarioService, ScenarioService>();
 
-builder.Services.AddScoped<LightTimeLogRepository>();
-builder.Services.AddScoped<LightTimeLogService>();
+builder.Services.AddScoped<ILightTimeLogRepository, LightTimeLogRepository>();
+builder.Services.AddScoped<ILightTimeLogService, LightTimeLogService>();
 
-builder.Services.AddScoped<TemplateSettingRepository>();
-builder.Services.AddScoped<TemplateSettingService>();
+builder.Services.AddScoped<ITemplateSettingRepository, TemplateSettingRepository>();
+builder.Services.AddScoped<ITemplateSettingService, TemplateSettingService>();
 
-builder.Services.AddScoped<RemoteControlRepository>();
-builder.Services.AddScoped<RemoteControlService>();
+builder.Services.AddScoped<IRemoteControlRepository, RemoteControlRepository>();
+builder.Services.AddScoped<IRemoteControlService, RemoteControlService>();
 
-builder.Services.AddScoped<RemoteControlKeyRepository>();
-builder.Services.AddScoped<RemoteControlKeyService>();
+builder.Services.AddScoped<IRemoteControlKeyRepository, RemoteControlKeyRepository>();
+builder.Services.AddScoped<IRemoteControlKeyService, RemoteControlKeyService>();
 
-builder.Services.AddScoped<MailSettingRepository>();
-builder.Services.AddScoped<MailSettingService>();
+builder.Services.AddScoped<IMailSettingRepository, MailSettingRepository>();
+builder.Services.AddScoped<IMailSettingService, MailSettingService>();
 
-builder.Services.AddScoped<NotificationRepository>();
-builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
@@ -133,6 +152,9 @@ builder.Services.AddSwaggerGen(setup =>
                     { jwtSecuritySheme, Array.Empty<string>() }
                 });
 });
+
+builder.Services.AddScoped<ISensorRepository, SensorRepository>();
+
 
 builder.Services.AddSignalR();
 

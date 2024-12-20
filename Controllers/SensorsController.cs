@@ -1,15 +1,13 @@
-﻿using Hangfire;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
-using SmartHomeServer.BackgroundServices;
 using SmartHomeServer.DTOs.SensorDto;
-using SmartHomeServer.Services;
+using SmartHomeServer.Services.Sensors;
 
 namespace SmartHomeServer.Controllers;
 [Authorize(AuthenticationSchemes = "Bearer")]
 public sealed class SensorsController(
-    SensorService sensorService) : ApiController
+    ISensorService sensorService) : ApiController
 {
     //Users
     [HttpPost]

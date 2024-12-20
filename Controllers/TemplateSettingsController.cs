@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
 using SmartHomeServer.DTOs.TemplateSettingDto;
-using SmartHomeServer.Services;
+using SmartHomeServer.Services.TemplateSettings;
 
 namespace SmartHomeServer.Controllers;
 
 [Authorize(AuthenticationSchemes = "Bearer")]
 public sealed class TemplateSettingsController(
-    TemplateSettingService templateSettingService) : ApiController
+    ITemplateSettingService templateSettingService) : ApiController
 {
     [HttpGet]
     public async Task<IActionResult> GetByUserId(Guid Id, CancellationToken cancellationToken)

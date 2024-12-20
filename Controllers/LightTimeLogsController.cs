@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
-using SmartHomeServer.Services;
+using SmartHomeServer.Services.LightTimeLogs;
 
 namespace SmartHomeServer.Controllers;
 [Authorize(AuthenticationSchemes = "Bearer")]
 public sealed class LightTimeLogsController(
-    LightTimeLogService lightTimeLogService) : ApiController
+    ILightTimeLogService lightTimeLogService) : ApiController
 {
     [HttpGet]
     public async Task<IActionResult> GetAllBySensorIdDaily(Guid Id, CancellationToken cancellationToken)

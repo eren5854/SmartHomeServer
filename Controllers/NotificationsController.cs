@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
-using SmartHomeServer.Services;
+using SmartHomeServer.Services.Notifications;
 
 namespace SmartHomeServer.Controllers;
 
 public sealed class NotificationsController(
-    NotificationService notificationService) : ApiController
+    INotificationService notificationService) : ApiController
 {
     [HttpGet]
     public async Task<IActionResult> GetAllByUserId(Guid Id, CancellationToken cancellationToken)

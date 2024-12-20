@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
 using SmartHomeServer.DTOs.RemoteControlDto;
-using SmartHomeServer.Services;
+using SmartHomeServer.Services.RemoteControls;
 
 namespace SmartHomeServer.Controllers;
 
 public sealed class RemoteControlsController(
-    RemoteControlService remoteControlService) : ApiController
+    IRemoteControlService remoteControlService) : ApiController
 {
     [HttpPost]
     public async Task<IActionResult> Create(CreateRemoteControlDto request, CancellationToken cancellationToken)

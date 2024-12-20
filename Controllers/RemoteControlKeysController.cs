@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartHomeServer.Abstractions;
 using SmartHomeServer.DTOs.RemoteControlKeyDto;
-using SmartHomeServer.Services;
+using SmartHomeServer.Services.RemoteControlKeys;
 
 namespace SmartHomeServer.Controllers;
 
 public sealed class RemoteControlKeysController(
-    RemoteControlKeyService remoteControlKeyService) : ApiController
+    IRemoteControlKeyService remoteControlKeyService) : ApiController
 {
     [HttpGet]
     public async Task<IActionResult> GetAllByRemoteControlSecretKey(string SecretKey, CancellationToken cancellationToken)
